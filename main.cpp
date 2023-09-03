@@ -16,6 +16,7 @@ int main() {
 
     // git测试
 
+    //
 
     // 测试Modent
     ModNet modNet;
@@ -28,4 +29,6 @@ int main() {
     string outImg1 = "E:\\lite.ai.toolkit.win\\result\\test_lightenhance.jpg";
     lightEnhance.detect(srcImg1, outImg1);
     cout << "hello lite ai" << endl;
+
+
 }
