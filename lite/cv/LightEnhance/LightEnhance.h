@@ -26,11 +26,19 @@ public:
     void detect(string srcImg, string outImg);
 
 private:
+#ifdef linux
     Ort::Env env;
-    Ort::Session session_{env, L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\LightEnhance\\LightEnhance_fp32.onnx",
+    Ort::Session session_{nullptr};
+    Ort::Value outputTensor{nullptr};
+
+#elif _WIN32
+   Ort::Session session_{env, L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\LightEnhance\\LightEnhance_fp32.onnx",
                           Ort::SessionOptions{nullptr}};
+
     // 如果在这里定义记得初始化一下他 {nullptr}
     Ort::Value outputTensor{nullptr};
+#endif
+
 };
 
 

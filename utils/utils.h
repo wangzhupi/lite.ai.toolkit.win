@@ -26,8 +26,6 @@ namespace Utils {
         void runNet(std::vector<float> input, int h, int w, Ort::Value &outputTensor);
     private:
         Ort::Env env;
-        Ort::Session session_{env, L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\CutOut\\CutOut_fp32.onnx",
-                                       Ort::SessionOptions{nullptr}};
     };
 
 }

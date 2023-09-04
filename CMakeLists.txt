@@ -17,6 +17,7 @@ if (WIN32)
 
 
     # 添加子目录
+    # TODO
     add_subdirectory(utils)
     add_subdirectory(lite)
 
@@ -29,20 +30,22 @@ if (WIN32)
 
 elseif (UNIX)
     # find opencv
-    find_package(OpenCV 4.7.0 REQUIRED)
+    find_package(OpenCV REQUIRED)
     include_directories(${OpenCV_INCLUDE_DIRS})
 
     # find onnx
     include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/include)
 
-    add_executable(lite main.cpp)
-    add_subdirectory(utils)
+    # 这里原来叫做lite与文件夹中的lite重名
+    # 改为lite_test debug成功
+    add_executable(lite_test main.cpp)
+#    add_subdirectory(utils)
     add_subdirectory(lite)
 
-    target_link_libraries(lite utils)
-    target_link_libraries(lite cutout)
-    target_link_libraries(lite lightenhance)
-    target_link_libraries(lite photo2cartoon)
-    target_link_libraries(lite ${OpenCV_LIBS})
-    target_link_libraries(lite /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
+#    target_link_libraries(lite utils)
+    target_link_libraries(lite_test cutout)
+    target_link_libraries(lite_test lightenhance)
+    target_link_libraries(lite_test photo2cartoon)
+    target_link_libraries(lite_test ${OpenCV_LIBS})
+    target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
 endif ()

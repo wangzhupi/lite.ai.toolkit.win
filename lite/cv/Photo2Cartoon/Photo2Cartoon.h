@@ -27,8 +27,14 @@ public:
     void detect(string srcImg, string outImg);
 
 private:
+#ifdef linux
     Ort::Env env;
+    Ort::Session session_{nullptr};
+    Ort::Session session_cartooin{nullptr};
 
+    // 这里必须要更正一下linux和windows的加载路径的方法有些不同
+
+#elif _WIN32
     Ort::Session session_{env, L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\Photo2Cartoon\\minivision_head_seg.onnx",
                           SessionOptions{nullptr}};
 
@@ -36,7 +42,7 @@ private:
     Ort::Session session_cartooin{env,
                                   L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\Photo2Cartoon\\Photo2Cartoon_fp32.onnx",
                                   SessionOptions{nullptr}};
-
+#endif
 
 
 
