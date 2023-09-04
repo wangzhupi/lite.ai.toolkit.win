@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22)
 project(aiDenoise)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -44,5 +44,5 @@ elseif (UNIX)
     target_link_libraries(lite lightenhance)
     target_link_libraries(lite photo2cartoon)
     target_link_libraries(lite ${OpenCV_LIBS})
-    target_link_libraries(test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
+    target_link_libraries(lite /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
 endif ()
