@@ -29,7 +29,8 @@ public:
 private:
 #ifdef linux
     Ort::Env env;
-    Ort::Session session_{nullptr};
+    Ort::Session session_{env, "/home/wangzijian/Desktop/lite.ai.toolkit.win/models/lite/cv/Photo2Cartoon/minivision_head_seg.onnx",
+                          Ort::SessionOptions{nullptr}};
     Ort::Session session_cartooin{nullptr};
 
     // 这里必须要更正一下linux和windows的加载路径的方法有些不同

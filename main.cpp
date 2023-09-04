@@ -33,13 +33,13 @@ int main() {
 
     // 图片修改
     ModNet modNet;
-    string srcImg = "";
-    string outImg = "";
+    string srcImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/modnetTest.jpg";
+    string outImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/modnetTest_linux.jpg";
     modNet.detect(srcImg,outImg);
 
     LightEnhance lightEnhance;
-    string srcImg1 = "";
-    string outImg1 = "";
+    string srcImg1 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/lightenhanceTest.jpg";
+    string outImg1 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/lightenhanceTest_linux.jpg";
     lightEnhance.detect(srcImg1, outImg1);
     cout << "hello lite ai" << endl;
 

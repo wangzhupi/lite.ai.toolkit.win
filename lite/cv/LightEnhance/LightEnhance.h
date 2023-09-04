@@ -28,7 +28,8 @@ public:
 private:
 #ifdef linux
     Ort::Env env;
-    Ort::Session session_{nullptr};
+    Ort::Session session_{env, "/home/wangzijian/Desktop/lite.ai.toolkit.win/models/lite/cv/LightEnhance/LightEnhance_fp32.onnx",
+                          Ort::SessionOptions{nullptr}};
     Ort::Value outputTensor{nullptr};
 
 #elif _WIN32

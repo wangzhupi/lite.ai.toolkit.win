@@ -32,9 +32,8 @@ public:
 private:
 #ifdef linux
     Ort::Env env;
-    Ort::Session session_{nullptr};
-//    Ort::Session session_{env, L"E:\\lite.ai.toolkit.win\\models\\lite\\cv\\CutOut\\CutOut_fp32.onnx",
-//                          Ort::SessionOptions{nullptr}};
+    Ort::Session session_{env, "/home/wangzijian/Desktop/lite.ai.toolkit.win/models/lite/cv/CutOut/CutOut_fp32.onnx",
+                          Ort::SessionOptions{nullptr}};
 
 #elif _WIN32
     Ort::Env env;
