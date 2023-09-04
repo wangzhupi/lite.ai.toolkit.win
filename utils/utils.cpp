@@ -18,6 +18,7 @@ namespace Utils {
         auto input_tensor = Ort::Value::CreateTensor<float>(memory_info, (float *) input.data(), 3 * h * w,
                                                             input_shape.data(), input_shape.size());
 
+        Ort::Session session_{nullptr};
         session_.Run(Ort::RunOptions(), input_names, &input_tensor, 1, output_names, &outputTensor, 1);
 
     }

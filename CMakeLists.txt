@@ -39,10 +39,10 @@ elseif (UNIX)
     # 这里原来叫做lite与文件夹中的lite重名
     # 改为lite_test debug成功
     add_executable(lite_test main.cpp)
-#    add_subdirectory(utils)
+    add_subdirectory(utils)
     add_subdirectory(lite)
 
-#    target_link_libraries(lite utils)
+    target_link_libraries(lite_test utils)
     target_link_libraries(lite_test cutout)
     target_link_libraries(lite_test lightenhance)
     target_link_libraries(lite_test photo2cartoon)
