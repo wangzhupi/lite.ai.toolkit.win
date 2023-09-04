@@ -10,6 +10,7 @@
 #include "vector"
 #include "onnxruntime_cxx_api.h"
 #include "time.h"
+#include "algorithm"
 
 using namespace cv;
 using namespace Ort;

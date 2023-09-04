@@ -101,14 +101,13 @@ void ModNet::runNet(std::vector<float> input, int h, int w, Ort::Value &outputTe
 void ModNet::postprocessMat(const float *outputDataPtr, int resize_w, int resize_h, Mat &outputMat) {
 
 
-    int totalNum = 3 * resize_h * resize_w;
+    int totalNum = 1 * resize_h * resize_w;
     std::vector<float> output_tensor(totalNum);
 
     // 拷贝到output_tensor其中
     std::copy(outputDataPtr, outputDataPtr + totalNum, output_tensor.data());
 
     // 后处理
-
     for (int i = 0; i < totalNum; ++i) {
         output_tensor[i] = output_tensor[i] * 255.0f;
         output_tensor[i] = int(output_tensor[i]);
@@ -153,8 +152,13 @@ void ModNet::detect(string srcimg, string outImg) {
     Ort::Value outputTensor{nullptr};
     runNet(inputArray, resize_h, resize_w, outputTensor);
 
+    // 获取输出shape的代码
     const float *outputDataPtr = outputTensor.GetTensorData<float>();
+    std::vector<int64_t> shape = outputTensor.GetTensorTypeAndShapeInfo().GetShape();
+
+
     cv::Mat outputMat(h, w, CV_8UC3);
+
 
     postprocessMat(outputDataPtr, resize_w, resize_h, outputMat);
 

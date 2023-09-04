@@ -8,6 +8,7 @@
 #include "utils/utils.h"
 #include "lite/cv/CutOut/ModNet.h"
 #include "lite/cv/LightEnhance/LightEnhance.h"
+#include "lite/cv/Photo2Cartoon/Photo2Cartoon.h"
 
 using namespace std;
 
@@ -31,16 +32,26 @@ int main() {
     cout << "hello lite ai" << endl;
 #elif linux
 
-    // 图片修改
+    // 人像分割测试
     ModNet modNet;
     string srcImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/modnetTest.jpg";
-    string outImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/modnetTest_linux.jpg";
-    modNet.detect(srcImg,outImg);
+    string outImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/modnetTest_linux1.jpg";
+    modNet.detect(srcImg, outImg);
 
+    // 暗光增强测试
     LightEnhance lightEnhance;
     string srcImg1 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/lightenhanceTest.jpg";
-    string outImg1 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/lightenhanceTest_linux.jpg";
+    string outImg1 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/lightenhanceTest_linux1.jpg";
     lightEnhance.detect(srcImg1, outImg1);
+
+    // photocartoon
+    Photo2Cartoon photo2Cartoon;
+    string srcImg2 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/photo2cartoonTest.jpg";
+    string outImg2 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/photo2cartoonTest_linux.jpg";
+    photo2Cartoon.detect(srcImg2, outImg2);
+
+
+
     cout << "hello lite ai" << endl;
 
 #endif

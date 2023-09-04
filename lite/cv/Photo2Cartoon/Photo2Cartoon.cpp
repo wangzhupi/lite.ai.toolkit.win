@@ -80,7 +80,6 @@ std::shared_ptr<float> Photo2Cartoon::runNet(cv::Mat normalizedMat) {
 
 void Photo2Cartoon::detect1(std::string srcImg, std::string outImg) {
 
-
     // 前处理
     cv::Mat test = cv::imread(srcImg);
     //备份test
