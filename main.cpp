@@ -43,5 +43,7 @@ int main() {
     lightEnhance.detect(srcImg1, outImg1);
     cout << "hello lite ai" << endl;
 
+#endif
+
 
 }
