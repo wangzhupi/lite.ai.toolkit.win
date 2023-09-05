@@ -11,7 +11,7 @@
 
 // preProcessd
 // photo->mask
-void Photo2Cartoon::preprocessMat_p2m(cv::Mat inputMat, cv::Mat &normalized) {
+void Photo2Cartoon::preprocessMat(cv::Mat inputMat, cv::Mat &normalized) {
     // 记录输入的长和宽 到时候resize要用
     int origin_h = inputMat.rows;
     int origin_w = inputMat.cols;
@@ -24,7 +24,7 @@ void Photo2Cartoon::preprocessMat_p2m(cv::Mat inputMat, cv::Mat &normalized) {
 }
 
 // photo -> cartoon
-void Photo2Cartoon::preprocessMat_p2c(cv::Mat inputMat, cv::Mat mask, cv::Mat &mergedMat) {
+void Photo2Cartoon::preprocessMat(cv::Mat inputMat, cv::Mat mask, cv::Mat &mergedMat) {
 
     cv::Mat face;
     cv::resize(inputMat, face, cv::Size(256, 256), 0, 0, INTER_AREA);
@@ -45,7 +45,7 @@ void Photo2Cartoon::preprocessMat_p2c(cv::Mat inputMat, cv::Mat mask, cv::Mat &m
 
 }
 
-float *Photo2Cartoon::runNet_p2c(cv::Mat merged, cv::Mat mask) {
+float *Photo2Cartoon::runNet(cv::Mat merged, cv::Mat mask) {
 
     std::array<int64_t, 4> input_shape_cartoon{1, 3, merged.rows, merged.cols};
     const unsigned int target_height_cartoon = input_shape_cartoon.at(2);
@@ -378,7 +378,7 @@ void Photo2Cartoon::detect(std::string srcImg, std::string outImg) {
 
     cv::Mat normalized;
 
-    preprocessMat_p2m(test, normalized);
+    preprocessMat(test, normalized);
 
     // 利用返回的指针来进行处理任务
     auto mask_ptr = runNet(normalized);
@@ -390,10 +390,9 @@ void Photo2Cartoon::detect(std::string srcImg, std::string outImg) {
 
     // 进行photo2cartoon的预处理
     cv::Mat merged;
-    preprocessMat_p2c(test, mask, merged);
+    preprocessMat(test, mask, merged);
 
-
-    float *cartoon_ptr = runNet_p2c(merged, mask);
+    float *cartoon_ptr = runNet(merged, mask);
     Mat cartoonMat;
     postprocessMat_p2c(cartoon_ptr,256,256,cartoonMat,mask);
 

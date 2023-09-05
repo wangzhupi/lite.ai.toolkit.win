@@ -16,17 +16,17 @@ using namespace cv;
 class Photo2Cartoon {
 public:
     // photo->mask
-    void preprocessMat_p2m(Mat inputMat, Mat &normalized);
+    void preprocessMat(Mat inputMat, Mat &normalized);
 
     // photo->cartoon
-    void preprocessMat_p2c(Mat inputMat, Mat mask,Mat &mergedMat);
+    void preprocessMat(Mat inputMat, Mat mask,Mat &mergedMat);
 
     void postprocessMat_p2c(float *outputDataPtr, int resize_w, int resize_h, Mat &outPutMat,Mat mask);
 
     // photo->mask
     float *runNet(cv::Mat normalized);
 
-    float *runNet_p2c(cv::Mat merged,cv::Mat mask);
+    float *runNet(cv::Mat merged,cv::Mat mask);
 
     void detect1(string srcImg, string outImg);
 

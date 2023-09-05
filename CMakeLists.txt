@@ -35,10 +35,10 @@ elseif (UNIX)
 
     # find onnx
     # linux
-    include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/include)
+    # include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/include)
 
     # virtual machine
-    # include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/include)
+     include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/include)
 
 
     # 这里原来叫做lite与文件夹中的lite重名
@@ -55,8 +55,8 @@ elseif (UNIX)
     target_link_libraries(lite_test ${OpenCV_LIBS})
 
     # linux
-    target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/lib/libonnxruntime.so)
+    # target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/lib/libonnxruntime.so)
 
-    # virtual machine
-    # target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
+#     virtual machine
+     target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
 endif ()
