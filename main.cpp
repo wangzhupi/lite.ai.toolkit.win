@@ -9,6 +9,7 @@
 #include "lite/cv/CutOut/ModNet.h"
 #include "lite/cv/LightEnhance/LightEnhance.h"
 #include "lite/cv/Photo2Cartoon/Photo2Cartoon.h"
+#include "lite/cv/Detect/Detic/DeticDet.h"
 
 using namespace std;
 
@@ -51,6 +52,11 @@ int main() {
 //    photo2Cartoon.detect1(srcImg2, outImg2);
 
     photo2Cartoon.detect(srcImg2, outImg2);
+
+    // 测试通过
+    DeticDet deticDet;
+    string srcImg3 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/desk.jpg";
+    deticDet.detect(srcImg3);
 
 
     cout << "hello lite ai" << endl;
