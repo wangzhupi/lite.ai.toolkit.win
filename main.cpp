@@ -35,7 +35,7 @@ int main() {
     // 人像分割测试
     ModNet modNet;
     string srcImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/modnetTest.jpg";
-    string outImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/modnetTest_linux1.jpg";
+    string outImg = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/modnetTest_linux2.jpg";
     modNet.detect(srcImg, outImg);
 
     // 暗光增强测试

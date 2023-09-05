@@ -34,7 +34,12 @@ elseif (UNIX)
     include_directories(${OpenCV_INCLUDE_DIRS})
 
     # find onnx
-    include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/include)
+    # linux
+    include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/include)
+
+    # virtual machine
+    # include_directories(/home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/include)
+
 
     # 这里原来叫做lite与文件夹中的lite重名
     # 改为lite_test debug成功
@@ -47,5 +52,10 @@ elseif (UNIX)
     target_link_libraries(lite_test lightenhance)
     target_link_libraries(lite_test photo2cartoon)
     target_link_libraries(lite_test ${OpenCV_LIBS})
-    target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
+
+    # linux
+    target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.14.1/lib/libonnxruntime.so)
+
+    # virtual machine
+    # target_link_libraries(lite_test /home/wangzijian/Desktop/onnxruntime-linux-x64-gpu-1.15.0/lib/libonnxruntime.so)
 endif ()
