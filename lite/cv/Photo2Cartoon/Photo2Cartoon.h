@@ -15,12 +15,18 @@ using namespace cv;
 
 class Photo2Cartoon {
 public:
-    void preprocessMat(Mat inputMat, Mat &normalized);
+    // photo->mask
+    void preprocessMat_p2m(Mat inputMat, Mat &normalized);
 
-    void postprocessMat(const float *outputDataPtr, int resize_w, int resize_h, Mat &outPutMat);
+    // photo->cartoon
+    void preprocessMat_p2c(Mat inputMat, Mat mask,Mat &mergedMat);
 
+    void postprocessMat_p2c(float *outputDataPtr, int resize_w, int resize_h, Mat &outPutMat,Mat mask);
 
-    std::shared_ptr<float> runNet(cv::Mat normalized);
+    // photo->mask
+    float *runNet(cv::Mat normalized);
+
+    float *runNet_p2c(cv::Mat merged,cv::Mat mask);
 
     void detect1(string srcImg, string outImg);
 
@@ -31,7 +37,9 @@ private:
     Ort::Env env;
     Ort::Session session_{env, "/home/wangzijian/Desktop/lite.ai.toolkit.win/models/lite/cv/Photo2Cartoon/minivision_head_seg.onnx",
                           Ort::SessionOptions{nullptr}};
-    Ort::Session session_cartooin{nullptr};
+
+    Ort::Session session_cartooin{env,"/home/wangzijian/Desktop/lite.ai.toolkit.win/models/lite/cv/Photo2Cartoon/Photo2Cartoon_fp32.onnx",
+                                  Ort::SessionOptions{nullptr}};
 
     // 这里必须要更正一下linux和windows的加载路径的方法有些不同
 

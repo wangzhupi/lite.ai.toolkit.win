@@ -10,7 +10,8 @@
 
 
 // preProcessd
-void Photo2Cartoon::preprocessMat(cv::Mat inputMat,cv::Mat &normalized) {
+// photo->mask
+void Photo2Cartoon::preprocessMat_p2m(cv::Mat inputMat, cv::Mat &normalized) {
     // 记录输入的长和宽 到时候resize要用
     int origin_h = inputMat.rows;
     int origin_w = inputMat.cols;
@@ -22,8 +23,103 @@ void Photo2Cartoon::preprocessMat(cv::Mat inputMat,cv::Mat &normalized) {
     inputMat.convertTo(normalized, CV_32FC3, 1.f / 255.f, 0);
 }
 
+// photo -> cartoon
+void Photo2Cartoon::preprocessMat_p2c(cv::Mat inputMat, cv::Mat mask, cv::Mat &mergedMat) {
 
-std::shared_ptr<float> Photo2Cartoon::runNet(cv::Mat normalizedMat) {
+    cv::Mat face;
+    cv::resize(inputMat, face, cv::Size(256, 256), 0, 0, INTER_AREA);
+    // face转为浮点数字
+    face.convertTo(face, CV_32FC3, 1.f, 0.f);
+
+    cv::resize(mask, mask, cv::Size(256, 256), 0, 0, INTER_AREA);
+
+    // 将mask转为3通道的
+
+    if (mask.channels() != 3) {
+        cv::cvtColor(mask, mask, COLOR_GRAY2BGR);
+    }
+
+    mergedMat = face.mul(mask) + (1.0 - mask) * 255.f;
+
+    mergedMat.convertTo(mergedMat, CV_32FC3, 1.f / 127.5f, -1.0f);
+
+}
+
+float *Photo2Cartoon::runNet_p2c(cv::Mat merged, cv::Mat mask) {
+
+    std::array<int64_t, 4> input_shape_cartoon{1, 3, merged.rows, merged.cols};
+    const unsigned int target_height_cartoon = input_shape_cartoon.at(2);
+    const unsigned int target_width_cartoon = input_shape_cartoon.at(3);
+    const unsigned int target_channel_cartoon = input_shape_cartoon.at(1);
+    const unsigned int target_tensor_size_cartoon =
+            target_channel_cartoon * target_height_cartoon * target_width_cartoon;
+    std::vector<float> tensor_value_handler_cartoon(3 * merged.rows * merged.cols);
+    tensor_value_handler_cartoon.resize(target_tensor_size_cartoon);
+
+
+    std::vector<cv::Mat> mat_channels;
+    cv::split(merged, mat_channels);
+    for (unsigned int i = 0; i < 3; ++i)
+        std::memcpy(tensor_value_handler_cartoon.data() + i * (target_height_cartoon * target_width_cartoon),
+                    mat_channels.at(i).data, target_height_cartoon * target_width_cartoon * sizeof(float));
+    auto memory_info_cartoon = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPUInput);
+
+
+    auto input_tensor_cartoon = Ort::Value::CreateTensor<float>(memory_info_cartoon,
+                                                                (float *) tensor_value_handler_cartoon.data(),
+                                                                3 * merged.rows * merged.rows,
+                                                                input_shape_cartoon.data(), input_shape_cartoon.size());
+
+
+    const char *input_names_cartoon[] = {"input"};
+    const char *output_names_cartoon[] = {"output"};
+
+    std::vector<Ort::Value> ort_output_cartoon = session_cartooin.Run(Ort::RunOptions(), input_names_cartoon,
+                                                                      &input_tensor_cartoon, 1, output_names_cartoon,
+                                                                      1);
+
+    Ort::Value &cartoon_pred = ort_output_cartoon.at(0);
+    auto cartoon_dims = cartoon_pred.GetTensorTypeAndShapeInfo().GetShape();
+    const unsigned int out_h_cartoon = cartoon_dims.at(2);
+    const unsigned int out_w_cartoon = cartoon_dims.at(3);
+
+    float *cartoon_ptr = cartoon_pred.GetTensorMutableData<float>();
+
+
+    vector<Mat> cartoon_channel_mats;
+    Mat rmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr);
+    Mat gmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr + out_h_cartoon * out_w_cartoon);
+    Mat bmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr + 2 * out_h_cartoon * out_w_cartoon);
+
+    // 这个地方也可以先合并 再用convertTo来进行
+    rmat = (rmat + 1) * 127.5;
+    gmat = (gmat + 1) * 127.5;
+    bmat = (bmat + 1) * 127.5;
+
+    cartoon_channel_mats.push_back(rmat);
+    cartoon_channel_mats.push_back(gmat);
+    cartoon_channel_mats.push_back(bmat);
+
+    Mat cartoon;
+    merge(cartoon_channel_mats, cartoon);
+
+    if (mask.channels() != 3)
+    {
+        cv::cvtColor(mask,mask,COLOR_GRAY2BGR);
+    }
+
+    cv::resize(mask, mask, cv::Size(256, 256), 0, 0, INTER_AREA);
+
+    cartoon = cartoon.mul(mask) + (1.f - mask) * 255.f;
+    cvtColor(cartoon, cartoon, COLOR_BGR2RGB);
+    // 这个操作是为了什么
+    cartoon.convertTo(cartoon, CV_8UC3);
+
+
+}
+
+
+float *Photo2Cartoon::runNet(cv::Mat normalizedMat) {
 
     std::vector<float> tensor_value_handler_seg(3 * normalizedMat.rows * normalizedMat.cols);
 
@@ -61,21 +157,40 @@ std::shared_ptr<float> Photo2Cartoon::runNet(cv::Mat normalizedMat) {
     const unsigned int out_w = mask_dims.at(2);
     const unsigned int out_channnels = mask_dims.at(3);
 
-//    float *mask_ptr = mask_pred.GetTensorMutableData<float>();
+    float *mask_ptr = mask_pred.GetTensorMutableData<float>();
+    std::vector<int64_t> shape = mask_pred.GetTensorTypeAndShapeInfo().GetShape();
 
-    std::shared_ptr<float> mask_ptr(
-            mask_pred.GetTensorMutableData<float>(),
-            [](float* p) {
-                // 自定义删除器
-            }
-    );
     return mask_ptr;
 
 }
 
+void Photo2Cartoon::postprocessMat_p2c(float *outputDataPtr, int out_w_cartoon, int out_h_cartoon, cv::Mat &outPutMat,
+                                       cv::Mat mask) {
+
+    vector<Mat> cartoon_channel_mats;
+
+    Mat rmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr);
+    Mat gmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr + out_h_cartoon * out_w_cartoon);
+    Mat bmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr + 2 * out_h_cartoon * out_w_cartoon);
+
+    rmat = (rmat + 1) * 127.5;
+    gmat = (gmat + 1) * 127.5;
+    bmat = (bmat + 1) * 127.5;
+
+    cartoon_channel_mats.push_back(rmat);
+    cartoon_channel_mats.push_back(gmat);
+    cartoon_channel_mats.push_back(bmat);
+
+    Mat cartoon;
+    merge(cartoon_channel_mats, cartoon);
+
+    cartoon = cartoon.mul(mask) + (1.f - mask) * 255.f;
+    cvtColor(cartoon, cartoon, COLOR_BGR2RGB);
+
+    cv::resize()
 
 
-
+}
 
 
 void Photo2Cartoon::detect1(std::string srcImg, std::string outImg) {
@@ -266,14 +381,6 @@ void Photo2Cartoon::detect1(std::string srcImg, std::string outImg) {
     Mat cartoon;
     merge(cartoon_channel_mats, cartoon);
 
-    cartoon.rows;
-    cartoon.cols;
-    cartoon.channels();
-
-    outputMask.channels();
-    outputMask.rows;
-    outputMask.cols;
-
 
     cartoon = cartoon.mul(normalized) + (1.f - outputMask) * 255.f;
     cvtColor(cartoon, cartoon, COLOR_BGR2RGB);
@@ -287,18 +394,32 @@ void Photo2Cartoon::detect1(std::string srcImg, std::string outImg) {
 void Photo2Cartoon::detect(std::string srcImg, std::string outImg) {
     cv::Mat test = cv::imread(srcImg);
 
+    // 记录原始传入的长和宽
+    int ori_w = test.cols;
+    int ori_h = test.rows;
+
     cv::Mat normalized;
 
-    preprocessMat(test,normalized);
-
-    auto mask_ptr = runNet(normalized);
+    preprocessMat_p2m(test, normalized);
 
     // 利用返回的指针来进行处理任务
-    // 辞职真会自动释放
+    auto mask_ptr = runNet(normalized);
+    // 得到mask的缩略图
+    cv::Mat mask(384, 384, CV_32FC1, mask_ptr);
+    // 释放指针
+    cv::Mat mask_out;
+    cv::resize(mask, mask_out, cv::Size(ori_w, ori_h), 0, 0, INTER_AREA);
 
-    float* p = mask_ptr.get();
+    // 进行photo2cartoon的预处理
+    cv::Mat merged;
+    preprocessMat_p2c(test, mask, merged);
 
-    cv::Mat mask(384, 384, CV_8UC1, p);
+
+    float *cartoon_ptr = runNet_p2c(merged, mask);
+//    Mat cartoonMat;
+//    postprocessMat_p2c(cartoon_ptr,256,256,cartoonMat,mask);
+
+
 
 
 }

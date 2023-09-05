@@ -48,6 +48,8 @@ int main() {
     Photo2Cartoon photo2Cartoon;
     string srcImg2 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/photo2cartoonTest.jpg";
     string outImg2 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/photo2cartoonTest_linux.jpg";
+//    photo2Cartoon.detect1(srcImg2, outImg2);
+
     photo2Cartoon.detect(srcImg2, outImg2);
 
 

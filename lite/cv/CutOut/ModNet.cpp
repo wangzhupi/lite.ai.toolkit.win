@@ -159,7 +159,6 @@ void ModNet::detect(string srcimg, string outImg) {
 
     cv::Mat outputMat(h, w, CV_8UC3);
 
-
     postprocessMat(outputDataPtr, resize_w, resize_h, outputMat);
 
     cv::imwrite(outImg, outputMat);
