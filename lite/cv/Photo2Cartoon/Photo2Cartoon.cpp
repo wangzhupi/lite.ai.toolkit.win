@@ -85,35 +85,7 @@ float *Photo2Cartoon::runNet_p2c(cv::Mat merged, cv::Mat mask) {
 
     float *cartoon_ptr = cartoon_pred.GetTensorMutableData<float>();
 
-
-    vector<Mat> cartoon_channel_mats;
-    Mat rmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr);
-    Mat gmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr + out_h_cartoon * out_w_cartoon);
-    Mat bmat(out_h_cartoon, out_w_cartoon, CV_32FC1, cartoon_ptr + 2 * out_h_cartoon * out_w_cartoon);
-
-    // 这个地方也可以先合并 再用convertTo来进行
-    rmat = (rmat + 1) * 127.5;
-    gmat = (gmat + 1) * 127.5;
-    bmat = (bmat + 1) * 127.5;
-
-    cartoon_channel_mats.push_back(rmat);
-    cartoon_channel_mats.push_back(gmat);
-    cartoon_channel_mats.push_back(bmat);
-
-    Mat cartoon;
-    merge(cartoon_channel_mats, cartoon);
-
-    if (mask.channels() != 3)
-    {
-        cv::cvtColor(mask,mask,COLOR_GRAY2BGR);
-    }
-
-    cv::resize(mask, mask, cv::Size(256, 256), 0, 0, INTER_AREA);
-
-    cartoon = cartoon.mul(mask) + (1.f - mask) * 255.f;
-    cvtColor(cartoon, cartoon, COLOR_BGR2RGB);
-    // 这个操作是为了什么
-    cartoon.convertTo(cartoon, CV_8UC3);
+    return cartoon_ptr;
 
 
 }
@@ -168,11 +140,11 @@ void Photo2Cartoon::postprocessMat_p2c(float *outputDataPtr, int out_w_cartoon, 
                                        cv::Mat mask) {
 
     vector<Mat> cartoon_channel_mats;
-
     Mat rmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr);
     Mat gmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr + out_h_cartoon * out_w_cartoon);
     Mat bmat(out_h_cartoon, out_w_cartoon, CV_32FC1, outputDataPtr + 2 * out_h_cartoon * out_w_cartoon);
 
+    // 这个地方也可以先合并 再用convertTo来进行
     rmat = (rmat + 1) * 127.5;
     gmat = (gmat + 1) * 127.5;
     bmat = (bmat + 1) * 127.5;
@@ -184,11 +156,17 @@ void Photo2Cartoon::postprocessMat_p2c(float *outputDataPtr, int out_w_cartoon, 
     Mat cartoon;
     merge(cartoon_channel_mats, cartoon);
 
+    if (mask.channels() != 3)
+    {
+        cv::cvtColor(mask,mask,COLOR_GRAY2BGR);
+    }
+
+    cv::resize(mask, mask, cv::Size(256, 256), 0, 0, INTER_AREA);
+
     cartoon = cartoon.mul(mask) + (1.f - mask) * 255.f;
     cvtColor(cartoon, cartoon, COLOR_BGR2RGB);
-
-    cv::resize()
-
+    // 这个操作是为了什么
+    cartoon.convertTo(outPutMat, CV_8UC3);
 
 }
 
@@ -416,10 +394,8 @@ void Photo2Cartoon::detect(std::string srcImg, std::string outImg) {
 
 
     float *cartoon_ptr = runNet_p2c(merged, mask);
-//    Mat cartoonMat;
-//    postprocessMat_p2c(cartoon_ptr,256,256,cartoonMat,mask);
+    Mat cartoonMat;
+    postprocessMat_p2c(cartoon_ptr,256,256,cartoonMat,mask);
 
-
-
-
+    cv::imwrite(outImg,cartoonMat);
 }
