@@ -51,6 +51,7 @@ elseif (UNIX)
     target_link_libraries(lite_test cutout)
     target_link_libraries(lite_test lightenhance)
     target_link_libraries(lite_test photo2cartoon)
+    target_link_libraries(lite_test headposeestimation)
     target_link_libraries(lite_test ${OpenCV_LIBS})
 
     # linux
