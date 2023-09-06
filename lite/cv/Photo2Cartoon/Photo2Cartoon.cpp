@@ -85,6 +85,7 @@ float *Photo2Cartoon::runNet(cv::Mat merged, cv::Mat mask) {
 
     float *cartoon_ptr = cartoon_pred.GetTensorMutableData<float>();
 
+    // TODO
     return cartoon_ptr;
 
 
