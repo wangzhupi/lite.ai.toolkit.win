@@ -16,9 +16,6 @@ using namespace std;
 
 int main() {
 
-    // git测试
-
-    // 测试Modent
 
 #ifdef _WIN32
     ModNet modNet;
