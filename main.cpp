@@ -74,9 +74,6 @@ int main() {
     codeFormer.detect(srcImg5,outImg5);
 
 
-
-
-
     cout << "hello lite ai" << endl;
 
 #endif
