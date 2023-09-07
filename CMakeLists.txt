@@ -53,6 +53,8 @@ elseif (UNIX)
     target_link_libraries(lite_test photo2cartoon)
     target_link_libraries(lite_test headposeestimation)
     target_link_libraries(lite_test detic)
+    target_link_libraries(lite_test resolution)
+    target_link_libraries(lite_test sketchdraw)
     target_link_libraries(lite_test ${OpenCV_LIBS})
 
     # linux

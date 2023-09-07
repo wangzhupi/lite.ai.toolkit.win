@@ -10,6 +10,9 @@
 #include "lite/cv/LightEnhance/LightEnhance.h"
 #include "lite/cv/Photo2Cartoon/Photo2Cartoon.h"
 #include "lite/cv/Detect/Detic/DeticDet.h"
+#include "lite/cv/SketchDraw/informative_draw.h"
+
+
 
 using namespace std;
 
@@ -51,9 +54,19 @@ int main() {
     photo2Cartoon.detect(srcImg2, outImg2);
 
     // 测试通过
+    // 待完善
     DeticDet deticDet;
     string srcImg3 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/desk.jpg";
     deticDet.detect(srcImg3);
+
+    Informative_Draw informativeDraw;
+    string srcImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/drawTest.png";
+    string outImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/DrawingsTest_linux3.jpg";
+    informativeDraw.detect(srcImg4, outImg4);
+
+    // 素笔画
+
+
 
 
     cout << "hello lite ai" << endl;
