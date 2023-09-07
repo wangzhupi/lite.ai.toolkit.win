@@ -33,6 +33,8 @@ CodeFormer::CodeFormer() {
 //    }
 
 
+    // TODO掌握多输入的案例
+
     const char* input1 = "input.1";
     const char* input2 = "onnx::Cast_1";
 
@@ -130,6 +132,9 @@ void CodeFormer::detect(std::string srcImg, std::string outImg) {
 
     cv::cvtColor(output,output,cv::COLOR_BGR2RGB);
 
+    // TODO
+    // 为什么这句和上面那句不一样
+    // 这个要明天核对一下
 
     output.convertTo(output,CV_32FC3,1.0f,min_max[0]);
 
