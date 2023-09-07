@@ -11,6 +11,7 @@
 #include "lite/cv/Photo2Cartoon/Photo2Cartoon.h"
 #include "lite/cv/Detect/Detic/DeticDet.h"
 #include "lite/cv/SketchDraw/informative_draw.h"
+#include "lite/cv/Resolution/CodeFormer.h"
 
 
 
@@ -59,12 +60,19 @@ int main() {
     string srcImg3 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/desk.jpg";
     deticDet.detect(srcImg3);
 
+    // 这里有三个模型可以选择
+    // 素笔画
     Informative_Draw informativeDraw;
     string srcImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/drawTest.png";
     string outImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/DrawingsTest_linux3.jpg";
     informativeDraw.detect(srcImg4, outImg4);
 
-    // 素笔画
+    // 超分模型
+    CodeFormer codeFormer;
+    string srcImg5 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/codefomerTest.png";
+    string outImg5 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/codefomerTest_linux.jpg";
+    codeFormer.detect(srcImg5,outImg5);
+
 
 
 
