@@ -8,6 +8,7 @@
 
 using namespace Ort;
 
+
 float *Informative_Draw::runNet(cv::Mat test, std::vector<int> &shape) {
     // 获取当前onnx的输入维度
     Ort::TypeInfo input_type_info = session_.GetInputTypeInfo(0);
