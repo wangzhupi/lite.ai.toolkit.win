@@ -64,7 +64,7 @@ int main() {
     // 素笔画
     Informative_Draw informativeDraw;
     string srcImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/drawTest.png";
-    string outImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/DrawingsTest_linux3.jpg";
+    string outImg4 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/result/DrawingsTest_linux3Test.jpg";
     informativeDraw.detect(srcImg4, outImg4);
 
     // 超分模型
