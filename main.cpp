@@ -60,6 +60,8 @@ int main() {
     string srcImg3 = "/home/wangzijian/Desktop/lite.ai.toolkit.win/resource/desk.jpg";
     deticDet.detect(srcImg3);
 
+    // test
+
     // 这里有三个模型可以选择
     // 素笔画
     Informative_Draw informativeDraw;
