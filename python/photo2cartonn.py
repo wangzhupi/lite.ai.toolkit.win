@@ -27,8 +27,9 @@ class Photo2Cartoon:
         face = (face * mask + (1 - mask) * 255) / 127.5 - 1
         face = np.transpose(face[np.newaxis, :, :, :], (0, 3, 1, 2)).astype(np.float32)
 
+        providers_list = ['CPUExecutionProvider']
         # inference
-        cartoon = self.cartoon_net.run(['output'], input_feed={'input': face})
+        cartoon = self.cartoon_net.run(['output'], input_feed={'input': face},providers = providers_list)
 
         # post-process
         cartoon = np.transpose(cartoon[0][0], (1, 2, 0))
